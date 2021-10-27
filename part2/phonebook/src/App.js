@@ -1,26 +1,5 @@
 import React, { useState } from 'react'
 
-const AddName = ({ event, persons, newName, newNumber, addName, handleNameChange }) => {
-  event.preventDefault()
-  const personArray = persons.map(e => e.name)
-  const nameObject = {
-    name: newName,
-    date: new Date().toISOString(),
-    number: newNumber,
-    id: persons.length + 1
-  }
-  return (
-    <div>
-      <h2>add a new</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-      </form>
-    </div>
-  )
-}
-
 const App = () => {
 // Initialize pieces of state for storing the user submitted input 
 const [persons, setPersons] = useState([
@@ -58,6 +37,7 @@ const [persons, setPersons] = useState([
     else {
       setPersons(persons.concat(nameObject))
       setNewName('')
+      setNewNumber('')
       console.log('button clicked', event.target)
     }
   }
@@ -79,6 +59,8 @@ const [persons, setPersons] = useState([
     setFilter(event.target.value)
     setFilterPersons(persons.filter((person) => 
     (person.name.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1)))
+    setPersons(persons.filter((person) => 
+    (person.name.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1)))
   }
 
   return (
@@ -89,7 +71,6 @@ const [persons, setPersons] = useState([
         filter shown with <input value={filter}
           onChange={handleFilterChange}/>
         </div>
-        
       </form>
       <h2>add a new</h2>
       <form onSubmit={addName}>
@@ -97,7 +78,7 @@ const [persons, setPersons] = useState([
           name: <input value={newName}
             onChange={handleNameChange} />
         </div>
-        <div>number<input value={newNumber}
+        <div>number: <input value={newNumber}
             onChange={handleNumberChange} /></div>
         <div>
           <button type="submit">add</button>
@@ -105,7 +86,7 @@ const [persons, setPersons] = useState([
       </form>
       <h2>Numbers</h2>
       <ul>
-        {filterPersons.map(person => 
+        {persons.map(person => 
         <li key={person.name}>{person.name} {person.number}</li>
         )}
       </ul>
