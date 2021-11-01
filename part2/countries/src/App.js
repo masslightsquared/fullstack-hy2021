@@ -1,21 +1,19 @@
-import axios from 'axios'
 import React, { useState, useEffect } from 'react'
-
+import axios from 'axios'
+import Country from './components/country'
 
 const App = () => {
-  const [ country, setCountry ] = useState("")
-  const [ countries, setCountries ] = useState([])
-  const [ countriesFilter, setCountriesFilter ] = useState([])
-  const [ showCountry, setShowCountry ] = useState({})
+  const [country, setCountry] = useState("")
+  const [countries, setCountries] = useState([])
+  const [countriesFilter, setCountriesFilter] = useState([])
+  const [showCountry, setShowCountry] = useState({})
 
   useEffect(() => {
-    console.log('effect')
     axios
-    .get('https://restcountries.com/v3.1/all')
-    .then(response => {
-      console.log('promise fulfilled')
-      setCountries(response.data)
-    })
+      .get('https://restcountries.eu/rest/v2/all')
+      .then(response => {
+        setCountries(response.data)
+      })
   }, [])
 
   useEffect(() => {
@@ -29,7 +27,7 @@ const App = () => {
     setCountriesFilter(
       countries.filter(
         (country) =>
-        country.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+          country.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1
       )
     )
   }
@@ -54,6 +52,7 @@ const App = () => {
       ) : (
         showCountries()
       )}
+      {showCountry.name  />}
     </>
   )
 }
