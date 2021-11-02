@@ -16,11 +16,7 @@ const App = () => {
       })
   }, [])
 
-  useEffect(() => {
-    setShowCountry(
-      countriesFilter.length === 1 ? { ...countriesFilter[0] } : {}
-    )
-  }, [countriesFilter])
+
 
   const searchCountry = (e) => {
     setCountry(e.target.value)
