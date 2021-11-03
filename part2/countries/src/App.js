@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import Country from './components/country'
 
 const App = () => {
   const [country, setCountry] = useState("")
@@ -10,7 +9,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get('https://restcountries.eu/rest/v2/all')
+      .get('https://restcountries.com/v3.1/all')
       .then(response => {
         setCountries(response.data)
       })
@@ -22,39 +21,36 @@ const App = () => {
     )
   }, [countriesFilter])
 
+  const showCountries = () => {
+    return countriesFilter.map((country) => (
+      <p key={country.name.common}>{country.name.common}
+       </p>
+    ))
+  }
+
   const searchCountry = (e) => {
     setCountry(e.target.value)
     setCountriesFilter(
       countries.filter(
-        (country) =>
-          country.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+        (country) => 
+          country.name.common.toLowerCase().search(e.target.value.toLowerCase()) !== -1
       )
     )
   }
 
-  const showCountries = () => {
-    return countriesFilter.map((country) => (
-      <p key={country.name}>
-        {country.name}
-        <button onClick={() => setShowCountry(country)}>show</button>
-      </p>
-    ))
-  }
-
   return (
     <>
-      <p>
-        find countries{" "}
-        <input value={country} onChange={searchCountry} />
-      </p>
+    <p>
+      find countries{" "}
+      <input value={country} onChange={searchCountry} />
+    </p>
       {countriesFilter.length > 10 ? (
         <p>Too many matches, specify another filter</p>
       ) : (
         showCountries()
       )}
-      {showCountry.name  />}
     </>
-  )
+    ) 
 }
 
 export default App
