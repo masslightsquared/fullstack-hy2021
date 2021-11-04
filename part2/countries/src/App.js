@@ -44,7 +44,7 @@ const App = () => {
       find countries{" "}
       <input value={country} onChange={searchCountry} />
     </p>
-      {countriesFilter.length > 10 ? (
+      { countriesFilter.length > 10 ? (
         <p>Too many matches, specify another filter</p>
       ) : (
         showCountries()

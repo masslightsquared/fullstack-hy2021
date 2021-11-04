@@ -1,12 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Note from './components/Note'
+import axios from 'axios'
+import noteService from './services/notes'
 
-const App = (props) => {
-  const [notes, setNotes] = useState(props.notes)
-  const [newNote, setNewNote] = useState(
-    'a new note...'
-  )
+
+const App = () => {
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState("")
   const [showAll, setShowAll] = useState(true) 
+
+  useEffect(() => {
+      noteService
+        .getAll()
+        .then(initialNotes => {
+          setNotes(initialNotes)
+      })
+  }, [])
 
   const addNote = (event) => {
     event.preventDefault()
@@ -14,13 +23,34 @@ const App = (props) => {
       content: newNote,
       date: new Date().toISOString(),
       important: Math.random() < 0.5,
-      id: notes.length + 1,
     }
 
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+        setNewNote('')  
+    })
+  }
+
+  const toggleImportanceOf = (id) => { 
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(
+          note => note.id !== id ? note : returnedNote
+          ))
+      })
+  }
+    /*
     setNotes(notes.concat(noteObject))
     setNewNote('')
     console.log('button clicked', event.target)
   }
+    */
 
   const notesToShow = showAll
     ? notes
@@ -40,8 +70,11 @@ const App = (props) => {
         </button>
       </div>
       <ul>
-        {notesToShow.map(note => 
-          <Note key={note.id} note={note} />
+        {notesToShow.map((note, i) => 
+          <Note 
+            key={i} 
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)} />
         )}
       </ul>
       <form id="test" onSubmit={addNote}>
