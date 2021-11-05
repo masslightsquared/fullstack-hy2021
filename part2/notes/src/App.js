@@ -29,7 +29,7 @@ const App = () => {
       .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote('')  
+        setNewNote("")
     })
   }
 
