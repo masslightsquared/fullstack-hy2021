@@ -1,5 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
+import noteService from './services/notes'
+
 
 const PersonForm = ({ addName, data }) => {
   return (
@@ -29,16 +31,23 @@ const Filter = ({ filter, handleFilterChange }) => {
   )
 }
 
-const Display = ({ persons }) => {
+const Display = ({ persons, toggleDelete }) => {
   return (
     <div>
     <ul>
     {persons.map(person => 
-    <li key={person.name}>{person.name} {person.number}</li>
+    <li key={person.name}>{person.name} {person.number}
+    {" "}
+    <button onClick={toggleDelete}>delete</button>
+    </li>
     )}
   </ul>
   </div>
   )
+}
+
+const toggleDelete = (id) => {
+
 }
 
 const App = () => {
@@ -49,6 +58,7 @@ const App = () => {
   const [ filter, setFilter ] = useState('')
   const [ filterPersons, setFilterPersons ] = useState(persons)
 
+  /* [OLD CODE - DELETE WHEN READY]
   useEffect(() => {
     console.log('effect')
     axios
@@ -58,7 +68,15 @@ const App = () => {
       setPersons(response.data)
     })
   }, [])
+  */
 
+  useEffect(() => {
+    noteService
+      .getAll()
+      .then(initialNames => {
+        setPersons(initialNames)
+      })
+  }, [])
 
 // Create addName function for creating new names, and nameObject for storing them. 
   const addName = (event) => {
@@ -86,6 +104,14 @@ const App = () => {
       setNewNumber('')
       console.log('button clicked', event.target)
     }
+
+    noteService
+      .create(nameObject)
+      .then(returnedName => {
+        setPersons(persons.concat(returnedName))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
 // Create an event handler that's called every time a change 
@@ -94,6 +120,7 @@ const App = () => {
     console.log(event.target.value)
     setNewName(event.target.value)
   }
+
 // Event handler for name changes in input element
   const handleNumberChange = (event) => {
     console.log(event.target.value)

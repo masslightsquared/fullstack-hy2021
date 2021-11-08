@@ -33,13 +33,13 @@
     {
       "content": "Testing",
       "date": "2021-11-04T14:08:04.029Z",
-      "important": false,
+      "important": true,
       "id": 6
     },
     {
       "content": "Here",
       "date": "2021-11-04T14:08:29.086Z",
-      "important": true,
+      "important": false,
       "id": 7
     },
     {
