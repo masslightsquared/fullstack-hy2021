@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import noteService from './services/notes'
 
@@ -19,6 +18,39 @@ const PersonForm = ({ addName, data }) => {
   </form>  
   )
 }
+
+const Persons = ({ filterPerson, setPerson, setMessage }) => {
+
+  const isDelete = ( person ) => {
+    const result = window.confirm(`Delete ${person.name}`)
+    if (result) {
+      noteService
+        .remove(person.id)
+        .then(response => {
+          setPerson(filterPerson.filter(item => item !== person))
+          setMessage({
+            text: `${person.name} has been removed`,
+            type: "success"
+          })
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+          })
+        }
+    }
+
+    return (
+      filterPerson.map((e) => 
+      <p>
+        {e.name}
+        {" "}
+        {e.number}
+        {" "}
+        <button onClick={() => isDelete(e)}>delete</button>
+      </p>
+      )
+    )
+  }
 
 const Filter = ({ filter, handleFilterChange }) => {
   return (
@@ -46,29 +78,15 @@ const Display = ({ persons, toggleDelete }) => {
   )
 }
 
-const toggleDelete = (id) => {
-
-}
-
 const App = () => {
 
-  const [persons, setPersons] = useState([])
+  const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ message, setMessage] = useState(null)
+
   const [ filter, setFilter ] = useState('')
   const [ filterPersons, setFilterPersons ] = useState(persons)
-
-  /* [OLD CODE - DELETE WHEN READY]
-  useEffect(() => {
-    console.log('effect')
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-    })
-  }, [])
-  */
 
   useEffect(() => {
     noteService
@@ -98,6 +116,7 @@ const App = () => {
         `${newName} is already added to phonebook.`
       )
       }
+
     else {
       setPersons(persons.concat(nameObject))
       setNewName('')
@@ -111,6 +130,7 @@ const App = () => {
         setPersons(persons.concat(returnedName))
         setNewName('')
         setNewNumber('')
+        console.log()
       })
   }
 
@@ -150,7 +170,11 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm addName={addName} data={addPersonData} />
       <h2>Numbers</h2>
-      <Display persons={persons} />
+      {filter === '' ?
+      <Persons filterPerson={persons} setPersons={setPersons} setMessage={setMessage}/>
+    :
+    <Persons filterPerson={filterPersons} setPersons={setPersons} setMessage={setMessage}/>
+    }
     </div>
   )
 }
