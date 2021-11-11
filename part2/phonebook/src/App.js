@@ -83,7 +83,7 @@ const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ message, setMessage] = useState(null)
+  const [ message, setMessage ] = useState(null)
 
   const [ filter, setFilter ] = useState('')
   const [ filterPersons, setFilterPersons ] = useState(persons)
